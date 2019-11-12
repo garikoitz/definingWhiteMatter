@@ -1,0 +1,169 @@
+%% 
+MAINDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/';
+doDetProb = {'det','prob'};  % 'det', 'prob' or both
+fmm       = '150';  % Tractogram filtered to fibers shorter than, in mm
+useCortex = true;   % If we want to use cortex as ROI
+
+% Dictionary for ROI 2 TRACT correspondence
+R2T = containers.Map();
+R2T(   'L_ATR') = {'ATR_roi1_L.nii.gz','ATR_roi2_L.nii.gz' };
+R2T(   'R_ATR') = {'ATR_roi1_R.nii.gz','ATR_roi2_R.nii.gz' };
+R2T(   'L_CGC') = {'CGC_roi1_L.nii.gz','CGC_roi2_L.nii.gz' };
+R2T(   'R_CGC') = {'CGC_roi1_R.nii.gz','CGC_roi2_R.nii.gz' };
+R2T(   'L_CST') = {'CST_roi1_L.nii.gz','CST_roi2_L.nii.gz' };
+R2T(   'R_CST') = {'CST_roi1_R.nii.gz','CST_roi2_R.nii.gz' };
+R2T(   'FA'   ) = {'FA_L.nii.gz'      ,'FA_R.nii.gz'       };
+R2T(   'FP'   ) = {'FP_L.nii.gz'      ,'FP_R.nii.gz'       };
+R2T(   'L_HCC') = {'HCC_roi1_L.nii.gz','HCC_roi2_L.nii.gz' };
+R2T(   'R_HCC') = {'HCC_roi1_R.nii.gz','HCC_roi2_R.nii.gz' };
+R2T(   'L_IFO') = {'IFO_roi1_L.nii.gz','IFO_roi2_L.nii.gz' };
+R2T(   'R_IFO') = {'IFO_roi1_R.nii.gz','IFO_roi2_R.nii.gz' };
+R2T(   'L_ILF') = {'ILF_roi1_L.nii.gz','ILF_roi2_L.nii.gz' };
+R2T(   'R_ILF') = {'ILF_roi1_R.nii.gz','ILF_roi2_R.nii.gz' };
+R2T(   'L_SLF') = {'SLF_roi1_L.nii.gz','SLF_roi2_L.nii.gz' };
+R2T(   'R_SLF') = {'SLF_roi1_R.nii.gz','SLF_roi2_R.nii.gz' };
+R2T(   'L_AF' ) = {'SLF_roi1_L.nii.gz','SLFt_roi2_L.nii.gz'};
+R2T(   'R_AF' ) = {'SLF_roi1_R.nii.gz','SLFt_roi2_R.nii.gz'};
+R2T(   'L_UNC') = {'UNC_roi1_L.nii.gz','UNC_roi2_L.nii.gz' };
+R2T(   'R_UNC') = {'UNC_roi1_R.nii.gz','UNC_roi2_R.nii.gz' };
+
+% Read all the subjects
+dirlist = dir(fullfile(MAINDIR, 'ROIs/s*'));
+subs = {dirlist.name};
+disp(subs);
+
+structural = fullfile(MAINDIR, "Structural");
+tractsoutdir = fullfile(MAINDIR, "tracts");
+ROIdir = fullfile(MAINDIR, "ROIs");
+makeSureDir(tractsoutdir);
+
+for i=1 : length(subs)
+   s = subs{i}; 
+   disp(s);
+   makeSureDir(fullfile(tractsoutdir, s));
+   makeSureDir(fullfile(tractsoutdir, s, strcat('tracts-',fmm)))
+   makeSureDir(fullfile(tractsoutdir, s, strcat('tracts-',fmm),'det'))
+   makeSureDir(fullfile(tractsoutdir, s, strcat('tracts-',fmm),'prob'))
+end    
+
+tcks = fullfile(MAINDIR, join(["TCK-Streamlines-",fmm,"mm"], ''));
+
+
+
+
+
+
+
+%%
+
+
+%arc = fgRead(fullfile(MAINDIR, 'tracts/s1/tracts-100/prob/L_CGC_cortex.tck'))
+%clean_arc = AFQ_removeFiberOutliers(arc,3,3,100,'median',1,5)
+%fgWrite(clean_arc, fullfile(MAINDIR, 'tracts/s1/tracts-100/prob/cleaned_L_CGC_cortex.tck'),'tck')
+
+%AFQ_RenderFibers(clean_arc, 'numfibers', 1000);
+
+
+%%
+
+noFibers_counter_det = 0
+noFibers_counter_prob = 0
+
+for i=1 : length(subs)
+   s = subs{i};
+   
+   % Obtain tracts dict and loop them
+   tracts = keys(R2T);   
+   for j=1 : length(tracts)
+       tr = tracts{j};
+       % Read required ROIs
+       v = R2T(tr);
+       for k=1 : length(doDetProb)
+           dodp = doDetProb{k};
+           if useCortex
+                tracks_original = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, strcat(tr,'_cortex.tck'));
+                tracks_cleaned = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_cortex.tck'],''));
+                tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_cortex.png'],''));
+                tracks_image_original = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join([tr,'_cortex.png'],''));
+
+           else
+                tracks_original = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, strcat(tr,'.tck'));
+                tracks_cleaned = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'.tck'],''));
+                tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'.png'],''));
+                tracks_image_original = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join([tr,'.png'],''));
+           end
+
+           
+           if ~isfile(tracks_cleaned) || ~isfile(tracks_image) || ~isfile(tracks_image_original)
+               
+               tract = fgRead(tracks_original);
+               
+               if size(tract.fibers{1},2) < 1
+                   disp('NO FIBERS:')
+                   disp(tracks_original)
+                   
+                   if strcmp(dodp,'det')
+                       noFibers_counter_det = noFibers_counter_det + 1;
+                       disp('det')
+                       disp(noFibers_counter_det)
+                       
+                   else
+                       noFibers_counter_prob = noFibers_counter_prob + 1;
+                       disp('prob')
+                       disp(noFibers_counter_prob)
+                       
+                   end
+                   disp(tracks_original)
+                   disp(' ')
+                   
+                   
+                   continue
+               end
+               continue
+               
+               AFQ_RenderFibers(tract, 'numfibers', 100);
+               % save original PNG
+               saveas(gcf,tracks_image_original,'png');
+               close(gcf);
+               
+               clean_tract = [];
+               
+               
+               cleaningFactor = 3;
+               cleaningStep = 0.5;
+               
+               for o=1:100
+                   % if first time, or we cleaned too agressively
+                   if isempty(clean_tract) || size(clean_tract.fibers{1},2) < 10
+                       cleaningFactor = cleaningFactor+cleaningStep;
+                       clean_tract = AFQ_removeFiberOutliers(tract,cleaningFactor,cleaningFactor,100,'median',1,5);
+                   end
+               end
+               
+               
+               fgWrite(clean_tract, tracks_cleaned,'tck');
+               
+               AFQ_RenderFibers(clean_tract, 'numfibers', 100);
+               % save cleaned PNG
+               if useCortex
+                   tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_cortex_',cleaningFactor,'.png'],''));
+               else
+                   tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_',cleaningFactor,'.png'],''));
+               end
+
+               saveas(gcf,tracks_image,'png');
+               close(gcf)
+           end
+       end
+   end
+end
+
+
+%%
+
+
+function makeSureDir(dirpath)
+    % shorter alternative: if ~exist(dirpath,'dir') mkdir(dirpath); end
+    if dirpath(end) ~= '/', dirpath = dirpath+'/'; end
+    if (exist(dirpath, 'dir') == 0), mkdir(dirpath); end
+end

@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
-import os
-import glob as glob
-import subprocess as sp
-join      = os.path.join
 
-# Stablish directories and options
+import glob as glob % dir
+import subprocess as sp % system() / help system
+join      = os.path.join % fullfile 
+
+# Establish directories and options
 SUBJDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/'
-doDetProb = ['det','prob']  # 'det', 'prob' or both
+doDetProb = {'det','prob'}  # 'det', 'prob' or both
 fmm       = '100'  # Tractogram filtered to fibers shorter than, in mm
-useCortex = True   # If we want to use cortex as ROI
+useCortex = true   # If we want to use cortex as ROI
 
 # Dictionary for ROI 2 TRACT correspondence
 R2T = {'L_ATR':('ATR_roi1_L.nii.gz','ATR_roi2_L.nii.gz' ),
@@ -65,10 +64,6 @@ tcks = join(SUBJDIR, "TCK-Streamlines-"+fmm+"mm")
 for s in subs:
 
     
-    # Make sure folders exist
-    #if not os.path.exists(join(s,'tracts-'+fmm)): os.mkdir(join(s,'tracts-'+fmm))
-    #if not os.path.exists(join(s,'tracts-'+fmm,'det')): os.mkdir(join(s,'tracts-'+fmm,'det'))
-    #if not os.path.exists(join(s,'tracts-'+fmm,'prob')): os.mkdir(join(s,'tracts-'+fmm,'prob'))
     
     # See if aparcaseg is binarized
     aparc    = join(structural, s,'T1w','aparc+aseg.nii.gz ')
@@ -117,7 +112,7 @@ for s in subs:
             cmd     = str('tckedit -include ' +ROI1+ ' -include ' +ROI2+ ' '+
                              Cortex + exclude + maxlength + minlength + force +
                              tracks_in +' '+tracks_out)
-            spres   = sp.call(cmd, shell=True)
+            spres   = sp.call(cmd, shell=True) % system
             
             
             
