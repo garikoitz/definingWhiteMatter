@@ -66,8 +66,8 @@ tcks = fullfile(MAINDIR, join(["TCK-Streamlines-",fmm,"mm"], ''));
 
 %%
 
-noFibers_counter_det = 0
-noFibers_counter_prob = 0
+noFibers_counter_det = 0;
+noFibers_counter_prob = 0;
 
 for i=1 : length(subs)
    s = subs{i};
@@ -119,7 +119,6 @@ for i=1 : length(subs)
                    
                    continue
                end
-               continue
                
                AFQ_RenderFibers(tract, 'numfibers', 100);
                % save original PNG
@@ -144,11 +143,14 @@ for i=1 : length(subs)
                fgWrite(clean_tract, tracks_cleaned,'tck');
                
                AFQ_RenderFibers(clean_tract, 'numfibers', 100);
+               
+               saveas(gcf,tracks_image,'png');
+               
                % save cleaned PNG
                if useCortex
-                   tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_cortex_',cleaningFactor,'.png'],''));
+                   tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_cortex_', num2str(cleaningFactor),'.png'],''));
                else
-                   tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_',cleaningFactor,'.png'],''));
+                   tracks_image = fullfile(tractsoutdir, s, strcat('tracts-',fmm), dodp, join(['cleaned_',tr,'_', num2str(cleaningFactor), '.png'],''));
                end
 
                saveas(gcf,tracks_image,'png');
