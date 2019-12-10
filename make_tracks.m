@@ -8,20 +8,20 @@
 
 % Dictionary for ROI 2 TRACT correspondence
 R2T = containers.Map();
-%R2T('L_AF' ) = {'SLF_roi1_L.nii.gz', 'SLFt_roi2_L.nii.gz','', 'prob', '150', 3, 3, 1, true };
-%R2T('R_AF' ) = {'SLF_roi1_R.nii.gz', 'SLFt_roi2_R.nii.gz','', 'prob', '150', 3, 3, 1, true };
-%R2T('L_SLF') = {'SLF_roi1_L.nii.gz', 'SLF_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 1, true };
-%R2T('R_SLF') = {'SLF_roi1_R.nii.gz', 'SLF_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 1, true };
-%R2T('L_CST') = {'CST_roi1_L.nii.gz', 'CST_roi2_L.nii.gz', '', 'prob', '150', 3, 3, 1, true };
-%R2T('R_CST') = {'CST_roi1_R.nii.gz', 'CST_roi2_R.nii.gz', '', 'prob', '150', 3, 3, 1, true };
-%R2T('L_CGC') = {'CGC_roi1_L.nii.gz', 'CGC_roi2_L.nii.gz', '', 'prob', '150', 3, 3, 1, true };
-%R2T('R_CGC') = {'CGC_roi1_R.nii.gz', 'CGC_roi2_R.nii.gz', '', 'prob', '150', 3, 3, 1, true };
-%R2T('L_UNC') = {'UNC_roi1_L.nii.gz', 'UNC_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 3, false };
-%R2T('R_UNC') = {'UNC_roi1_R.nii.gz', 'UNC_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 3, false };
+R2T('L_AF' ) = {'SLF_roi1_L.nii.gz', 'SLFt_roi2_L.nii.gz','', 'prob', '150', 3, 3, 1, true };
+R2T('R_AF' ) = {'SLF_roi1_R.nii.gz', 'SLFt_roi2_R.nii.gz','', 'prob', '150', 3, 3, 1, true };
+R2T('L_SLF') = {'SLF_roi1_L.nii.gz', 'SLF_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 1, true };
+R2T('R_SLF') = {'SLF_roi1_R.nii.gz', 'SLF_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 1, true };
+R2T('L_CST') = {'CST_roi1_L.nii.gz', 'CST_roi2_L.nii.gz', '', 'prob', '150', 3, 3, 1, true };
+R2T('R_CST') = {'CST_roi1_R.nii.gz', 'CST_roi2_R.nii.gz', '', 'prob', '150', 3, 3, 1, true };
+R2T('L_CGC') = {'CGC_roi1_L.nii.gz', 'CGC_roi2_L.nii.gz', '', 'prob', '150', 3, 3, 1, true };
+R2T('R_CGC') = {'CGC_roi1_R.nii.gz', 'CGC_roi2_R.nii.gz', '', 'prob', '150', 3, 3, 1, true }
+R2T('L_UNC') = {'UNC_roi1_L.nii.gz', 'UNC_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 3, false };
+R2T('R_UNC') = {'UNC_roi1_R.nii.gz', 'UNC_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 3, false };
 R2T('L_IFO') = {'IFO_roi1_L.nii.gz', 'IFO_roi2_L.nii.gz', 'IFO_roi3_L.nii.gz', 'prob', '200', 3, 3, 1, true};
 R2T('R_IFO') = {'IFO_roi1_R.nii.gz', 'IFO_roi2_R.nii.gz', 'IFO_roi3_R.nii.gz', 'prob', '200', 3, 3, 1, true};
-%R2T('L_ILF') = {'ILF_roi1_L.nii.gz', 'ILF_roi2_L.nii.gz', 'ILF_roi3_L.nii.gz', 'prob', '150', 3, 3, 1, true };
-%R2T('R_ILF') = {'ILF_roi1_R.nii.gz', 'ILF_roi2_R.nii.gz', 'ILF_roi3_R.nii.gz', 'prob', '150', 3, 3, 1, true };
+R2T('L_ILF') = {'ILF_roi1_L.nii.gz', 'ILF_roi2_L.nii.gz', 'ILF_roi3_L.nii.gz', 'prob', '150', 3, 3, 1, true };
+R2T('R_ILF') = {'ILF_roi1_R.nii.gz', 'ILF_roi2_R.nii.gz', 'ILF_roi3_R.nii.gz', 'prob', '150', 3, 3, 1, true };
 
 % old ones
 %R2T('L_ATR') = {'ATR_roi1_L.nii.gz', 'ATR_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 1, true };
@@ -61,7 +61,7 @@ tcks('200') = fullfile(MAINDIR, join(["TCK-Streamlines-",'200',"mm"],''));
 
 
 % Do for all subjects
-for i=6: length(subs)
+for i=1: length(subs)
    s = subs{i}; 
    % See if aparcaseg is binarized
    aparc    = fullfile(structural, s,'T1w','aparc+aseg.nii.gz ');
@@ -97,9 +97,12 @@ for i=6: length(subs)
        tr = tracts{j};
        % Read required ROIs
        v = R2T(tr);
-       ROI1   = fullfile(ROIdir, s,'ROIs', v{1}); % include ROI
-       ROI2   = fullfile(ROIdir, s,'ROIs', v{2}); % include ROI
-       ROI3   = fullfile(ROIdir, s,'ROIs', v{3}); % include ROI
+       include_ROI1   = join([' -include ', fullfile(ROIdir, s,'ROIs', v{1})]); % include ROI
+       include_ROI2   = join([' -include ', fullfile(ROIdir, s,'ROIs', v{2})]); % include ROI
+       include_ROI3   = join([' -include ', fullfile(ROIdir, s,'ROIs', v{3})]); % include ROI
+       if isempty(v{3})
+          include_ROI3 = ' '; 
+       end
        detprob= v{4};
        fmm    = v{5};
        maxDist= v{6};
@@ -114,9 +117,11 @@ for i=6: length(subs)
        end
        
        
+       
+       
        % Run the mrtrix code
        % Set options
-       include   = join([' -include ', ROI1, ' -include ', ROI2, ' -include ', ROI3]);
+       include   = join([include_ROI1, include_ROI2, include_ROI3]);
        exclude   = ' '; % can be ' ' or '-exclude roi.nii.gz '
        
        maxlength = ' '; % can be ' ' or '-maxlength xx '
@@ -133,20 +138,10 @@ for i=6: length(subs)
        
        cmd = join(['tckedit -quiet ', exclude, ' ', include, Cortex, maxlength, minlength, force, ...
                          tracks_in, ' ', tracks_out],'');
-       cmd2 = '';
-       cmd3 = '';
-       if ~isempty(exclude)  
-           cmd = join(['tckedit -quiet ', exclude, ' ', include, Cortex, maxlength, minlength, force, ...
-                         tracks_in, ' temp.tck '],'');
-           cmd2 = join(['tckedit -quiet ', exclude, ' temp.tck ', tracks_out],'');
-           cmd3 = 'rm temp.tck'
-       end
+  
        
-       disp(cmd2);
-       
+       disp(cmd)
        spres = system(cmd);
-       spres2 = system(cmd2);
-       spres3 = system(cmd3);
        
        fileattrib(tracks_in, '+w +x') % make it readable and writeable
        fileattrib(tracks_out, '+w +x') % make it readable and writeable
