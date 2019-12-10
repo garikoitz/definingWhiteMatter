@@ -10,7 +10,7 @@
 %% 
 MAINDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/';
 doDetProb = {'det','prob'};  % 'det', 'prob' or both
-fmm       = '150';  % Tractogram filtered to fibers shorter than, in mm
+fmm       = '100';  % Tractogram filtered to fibers shorter than, in mm
 useCortex = true;   % If we want to use cortex as ROI
 
 % Dictionary for ROI 2 TRACT correspondence
@@ -126,7 +126,7 @@ end
 
 
 
-
+disp('FINISHED waypoints.m')
 
 %%
 

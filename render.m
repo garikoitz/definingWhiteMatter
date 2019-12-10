@@ -1,7 +1,14 @@
+% add these to your path:
+%addpath(genpath('/data/localhome/lagudiez/scitran'))
+%addpath(genpath('/data/localhome/lagudiez/JSONio'))
+%addpath(genpath('/data/localhome/lagudiez/definingWhiteMatter'))
+%addpath(genpath('/data/localhome/lagudiez/vistasoft'))
+%addpath(genpath('/data/localhome/lagudiez/AFQ'))
+
 %% 
 MAINDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/';
 doDetProb = {'det','prob'};  % 'det', 'prob' or both
-fmm       = '150';  % Tractogram filtered to fibers shorter than, in mm
+fmm       = '100';  % Tractogram filtered to fibers shorter than, in mm
 useCortex = true;   % If we want to use cortex as ROI
 
 % Dictionary for ROI 2 TRACT correspondence
@@ -133,7 +140,7 @@ for i=1 : length(subs)
                
                for o=1:100
                    % if first time, or we cleaned too agressively
-                   if isempty(clean_tract) || size(clean_tract.fibers{1},2) < 10
+                   if isempty(clean_tract) || isempty(clean_tract.fibers) || size(clean_tract.fibers{1},2) < 10
                        cleaningFactor = cleaningFactor+cleaningStep;
                        clean_tract = AFQ_removeFiberOutliers(tract,cleaningFactor,cleaningFactor,100,'median',1,5);
                    end
@@ -160,6 +167,7 @@ for i=1 : length(subs)
    end
 end
 
+disp('FINISHED render.m!')
 
 %%
 
