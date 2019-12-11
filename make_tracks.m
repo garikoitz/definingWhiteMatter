@@ -16,12 +16,12 @@ R2T('L_CST') = {'CST_roi1_L.nii.gz', 'CST_roi2_L.nii.gz', '', 'prob', '150', 3, 
 R2T('R_CST') = {'CST_roi1_R.nii.gz', 'CST_roi2_R.nii.gz', '', 'prob', '150', 3, 3, 1, true };
 R2T('L_CGC') = {'CGC_roi1_L.nii.gz', 'CGC_roi2_L.nii.gz', '', 'prob', '150', 3, 3, 1, true };
 R2T('R_CGC') = {'CGC_roi1_R.nii.gz', 'CGC_roi2_R.nii.gz', '', 'prob', '150', 3, 3, 1, true }
-R2T('L_UNC') = {'UNC_roi1_L.nii.gz', 'UNC_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 3, false };
-R2T('R_UNC') = {'UNC_roi1_R.nii.gz', 'UNC_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 3, false };
+R2T('L_UNC') = {'UNC_roi1_L.nii.gz', 'UNC_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 4, false }; %
+R2T('R_UNC') = {'UNC_roi1_R.nii.gz', 'UNC_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 4, false }; %
 R2T('L_IFO') = {'IFO_roi1_L.nii.gz', 'IFO_roi2_L.nii.gz', 'IFO_roi3_L.nii.gz', 'prob', '200', 3, 3, 1, true};
 R2T('R_IFO') = {'IFO_roi1_R.nii.gz', 'IFO_roi2_R.nii.gz', 'IFO_roi3_R.nii.gz', 'prob', '200', 3, 3, 1, true};
-R2T('L_ILF') = {'ILF_roi1_L.nii.gz', 'ILF_roi2_L.nii.gz', 'ILF_roi3_L.nii.gz', 'prob', '150', 3, 3, 1, true };
-R2T('R_ILF') = {'ILF_roi1_R.nii.gz', 'ILF_roi2_R.nii.gz', 'ILF_roi3_R.nii.gz', 'prob', '150', 3, 3, 1, true };
+R2T('L_ILF') = {'ILF_roi1_L.nii.gz', 'ILF_roi2_L.nii.gz', 'ILF_roi3_L.nii.gz', 'prob', '150', 3, 3, 2, true }; %
+R2T('R_ILF') = {'ILF_roi1_R.nii.gz', 'ILF_roi2_R.nii.gz', 'ILF_roi3_R.nii.gz', 'prob', '150', 3, 3, 2, true }; %
 
 % old ones
 %R2T('L_ATR') = {'ATR_roi1_L.nii.gz', 'ATR_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 1, true };
