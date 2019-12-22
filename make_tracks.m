@@ -1,10 +1,12 @@
 % add these to your path:
-%addpath(genpath('/data/localhome/lagudiez/scitran'))
-%addpath(genpath('/data/localhome/lagudiez/JSONio'))
 %addpath(genpath('/data/localhome/lagudiez/definingWhiteMatter'))
 %addpath(genpath('/data/localhome/lagudiez/vistasoft'))
 %addpath(genpath('/data/localhome/lagudiez/AFQ'))
 %addpath(genpath('/data/localhome/lagudiez/freesurfer_mrtrix_afni_matlab_tools'))
+
+
+addpath(genpath('/Users/glerma/soft/definingWhiteMatter'))
+MAINDIR   = '/Users/glerma/Documents/STANFORD_PROJECTS/DefiningWM';
 
 % Dictionary for ROI 2 TRACT correspondence
 R2T = containers.Map();
@@ -23,18 +25,9 @@ R2T('R_IFO') = {'IFO_roi1_R.nii.gz', 'IFO_roi2_R.nii.gz', 'IFO_roi3_R.nii.gz', '
 R2T('L_ILF') = {'ILF_roi1_L.nii.gz', 'ILF_roi2_L.nii.gz', 'ILF_roi3_L.nii.gz', 'prob', '150', 3, 3, 2, true }; %
 R2T('R_ILF') = {'ILF_roi1_R.nii.gz', 'ILF_roi2_R.nii.gz', 'ILF_roi3_R.nii.gz', 'prob', '150', 3, 3, 2, true }; %
 
-% old ones
-%R2T('L_ATR') = {'ATR_roi1_L.nii.gz', 'ATR_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 1, true };
-%R2T('R_ATR') = {'ATR_roi1_R.nii.gz', 'ATR_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 1, true };
-%R2T('FA'   ) = {'FA_L.nii.gz'      , 'FA_R.nii.gz'      , '', 'prob', '100', 3, 3, 1, true };
-%R2T('FP'   ) = {'FP_L.nii.gz'      , 'FP_R.nii.gz'      , '', 'prob', '100', 3, 3, 1, true };
-%R2T('L_HCC') = {'HCC_roi1_L.nii.gz', 'HCC_roi2_L.nii.gz', '', 'prob', '100', 3, 3, 1, true };
-%R2T('R_HCC') = {'HCC_roi1_R.nii.gz', 'HCC_roi2_R.nii.gz', '', 'prob', '100', 3, 3, 1, true };
-
-
 
 % Read all the subjects
-MAINDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/';
+
 
 dirlist = dir(fullfile(MAINDIR, 'ROIs/s*'));
 subs = {dirlist.name};
@@ -43,15 +36,14 @@ structural = fullfile(MAINDIR, "Structural");
 tractsoutdir = fullfile(MAINDIR, "tracts");
 ROIdir = fullfile(MAINDIR, "ROIs");
 
-
-makeSureDir(MAINDIR);
-makeSureDir(structural);
-makeSureDir(tractsoutdir);
-makeSureDir(ROIdir);
-
+if ~exist(MAINDIR,'dir') mkdir(MAINDIR); end
+if ~exist(structural,'dir') mkdir(structural); end
+if ~exist(tractsoutdir,'dir') mkdir(tractsoutdir); end
+if ~exist(ROIdir,'dir') mkdir(ROIdir); end
 for i=1 : length(subs)
    s = subs{i}; 
-   makeSureDir(fullfile(tractsoutdir, s));
+   if ~exist(fullfile(tractsoutdir, s),'dir') mkdir(fullfile(tractsoutdir, s)); end
+
 end    
 
 tcks = containers.Map();
@@ -78,8 +70,7 @@ for i=1: length(subs)
        spres = system(cmd);
    end
    
-   
-   
+  
    % Get path to the det and prob tractograms
    tractogram = containers.Map();
    tractogram('det100')  = fullfile(tcks('100'), s, join(['tracking-deterministic-','100','mm.tck']));
@@ -116,15 +107,11 @@ for i=1: length(subs)
            Cortex = ' ';
        end
        
-       
-       
-       
        % Run the mrtrix code
        % Set options
        include   = join([include_ROI1, include_ROI2, include_ROI3]);
        exclude   = ' '; % can be ' ' or '-exclude roi.nii.gz '
-       
-       maxlength = ' '; % can be ' ' or '-maxlength xx '
+       maxlength = ' '; % can be ' ' or '-maxlength xx ' >>> tractogram already selected
        minlength = ' '; % can be ' ' or '-minlength xx ' 
        force     = ' -force '; % can be ' ' or '-force '
        
@@ -140,7 +127,7 @@ for i=1: length(subs)
                          tracks_in, ' ', tracks_out],'');
   
        
-       disp(cmd)
+       % disp(cmd)
        spres = system(cmd);
        
        fileattrib(tracks_in, '+w +x') % make it readable and writeable
@@ -169,12 +156,6 @@ for i=1: length(subs)
            continue
        end
 
-       %AFQ_RenderFibers(track, 'numfibers', 100);
-       % save original PNG
-       %saveas(gcf,tracks_image_original,'png');
-       %fileattrib(tracks_image_original, '+w +x') % make it readable and writeable
-
-       %close(gcf);
 
        clean_track = AFQ_removeFiberOutliers(track,maxDist,maxLen,100,'median',1,maxIter);
 
@@ -182,33 +163,7 @@ for i=1: length(subs)
        fileattrib(tracks_cleaned, '+w +x') % make it readable and writeable
 
 
-       %AFQ_RenderFibers(clean_track, 'numfibers', 100);
-
-       %saveas(gcf,tracks_image,'png');
-       %fileattrib(tracks_image, '+w +x') % make it readable and writeable
-
-
-       % save cleaned PNG
-       if useCortex
-           tracks_image = fullfile(tractsoutdir, s, join(['cleaned_',tr,'_cortex','.png'],''));
-       else
-           tracks_image = fullfile(tractsoutdir, s, join(['cleaned_',tr,'.png'],''));
-       end
-
-       %saveas(gcf,tracks_image,'png');
-       %fileattrib(tracks_image, '+w +x') % make it readable and writeable
-
-       %close(gcf)
    end
 end
 
 disp('Finished')
-
-%% functions
-
-function makeSureDir(dirpath)
-    % shorter alternative: if ~exist(dirpath,'dir') mkdir(dirpath); end
-    if dirpath(end) ~= '/', dirpath = dirpath+'/'; end
-    if (exist(dirpath, 'dir') == 0), mkdir(dirpath); end
-    fileattrib(dirpath, '+w +x') % make it readable and writeable
-end

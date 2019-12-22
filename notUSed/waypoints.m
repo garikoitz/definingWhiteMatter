@@ -8,7 +8,8 @@
 
 
 %% 
-MAINDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/';
+% MAINDIR   = '/share/wandell/users/glerma/TESTDATA/DefiningWMtractography/lucas/';
+MAINDIR   = '~/Documents/STANFORD_PROJECTS/DefiningWM/';
 doDetProb = {'det','prob'};  % 'det', 'prob' or both
 fmm       = '100';  % Tractogram filtered to fibers shorter than, in mm
 useCortex = true;   % If we want to use cortex as ROI
@@ -127,12 +128,3 @@ end
 
 
 disp('FINISHED waypoints.m')
-
-%%
-
-
-function makeSureDir(dirpath)
-    % shorter alternative: if ~exist(dirpath,'dir') mkdir(dirpath); end
-    if dirpath(end) ~= '/', dirpath = dirpath+'/'; end
-    if (exist(dirpath, 'dir') == 0), mkdir(dirpath); end
-end
